@@ -1,7 +1,7 @@
 package com.petshop.cadastro_animal_petshop.controller;
 
 import com.petshop.cadastro_animal_petshop.infrastruture.entitys.Animal;
-import com.petshop.cadastro_animal_petshop.services.AnimalService; // Ajuste o pacote se necessário
+import com.petshop.cadastro_animal_petshop.services.AnimalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +38,20 @@ public class AnimalController {
         }
     }
 
+    @GetMapping("/busca")
+    public ResponseEntity<List<Animal>> buscarAnimalPorNome(@RequestParam String nome) {
+        try {
+            List<Animal> animais = animalService.buscarPorNome(nome);
+
+            if (animais.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(animais);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Animal> atualizarAnimal(@PathVariable int id, @RequestBody Animal animalAtualizado) {
         try {
@@ -52,7 +66,7 @@ public class AnimalController {
     public ResponseEntity<Void> deletarAnimal(@PathVariable int id) {
         try {
             animalService.deletarAnimal(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 204 No Content
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

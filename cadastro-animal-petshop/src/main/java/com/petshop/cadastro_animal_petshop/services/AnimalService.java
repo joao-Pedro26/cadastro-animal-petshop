@@ -4,7 +4,7 @@ import com.petshop.cadastro_animal_petshop.infrastruture.entitys.Animal;
 import com.petshop.cadastro_animal_petshop.infrastruture.repository.AnimalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional; // Import correto
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,6 +30,10 @@ public class AnimalService {
                 .orElseThrow(() -> new RuntimeException("Animal não encontrado com o id: " + id));
     }
 
+    @Transactional(readOnly = true)
+    public List<Animal> buscarPorNome(String nome) {
+        return animalRepository.findByNome(nome);
+    }
 
     @Transactional
     public Animal atualizarAnimal(int id, Animal animal) {
@@ -40,7 +44,6 @@ public class AnimalService {
                 .nome(animal.getNome() != null ? animal.getNome() : animalExistente.getNome())
                 .especie(animal.getEspecie() != null ? animal.getEspecie() : animalExistente.getEspecie())
                 .raca(animal.getRaca() != null ? animal.getRaca() : animalExistente.getRaca())
-
                 .idade(animal.getIdade() > 0 ? animal.getIdade() : animalExistente.getIdade())
                 .peso(animal.getPeso() > 0.0 ? animal.getPeso() : animalExistente.getPeso())
                 .sexo(animal.getSexo() != '\u0000' ? animal.getSexo() : animalExistente.getSexo())
