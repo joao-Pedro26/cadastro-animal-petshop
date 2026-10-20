@@ -18,7 +18,7 @@ public class Animal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Integer id;
 
     @Column(name = "nome")
     private String nome;
@@ -30,13 +30,13 @@ public class Animal {
     private String raca;
 
     @Column(name = "idade")
-    private int idade;
+    private Integer idade;
 
     @Column(name = "peso")
-    private double peso;
+    private Double peso;
 
     @Column(name = "sexo")
-    private char sexo;
+    private Character sexo;
 
 
 }

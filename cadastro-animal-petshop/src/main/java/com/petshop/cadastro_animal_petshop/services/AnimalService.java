@@ -36,21 +36,33 @@ public class AnimalService {
     }
 
     @Transactional
-    public Animal atualizarAnimal(int id, Animal animal) {
+    public Animal atualizarAnimal(int id, Animal animalAtualizado) {
+        // 1. O Hibernate busca no banco e começa a "monitorar" este objeto (Managed State)
         Animal animalExistente = buscarPorId(id);
 
-        Animal animalAtualizado = Animal.builder()
+        // 2. Atualizamos apenas o que não for nulo direto no objeto monitorado
+        if (animalAtualizado.getNome() != null) {
+            animalExistente.setNome(animalAtualizado.getNome());
+        }
+        if (animalAtualizado.getEspecie() != null) {
+            animalExistente.setEspecie(animalAtualizado.getEspecie());
+        }
+        if (animalAtualizado.getRaca() != null) {
+            animalExistente.setRaca(animalAtualizado.getRaca());
+        }
+        if (animalAtualizado.getIdade() != null) {
+            animalExistente.setIdade(animalAtualizado.getIdade());
+        }
+        if (animalAtualizado.getPeso() != null) {
+            animalExistente.setPeso(animalAtualizado.getPeso());
+        }
+        if (animalAtualizado.getSexo() != null) {
+            animalExistente.setSexo(animalAtualizado.getSexo());
+        }
 
-                .nome(animal.getNome() != null ? animal.getNome() : animalExistente.getNome())
-                .especie(animal.getEspecie() != null ? animal.getEspecie() : animalExistente.getEspecie())
-                .raca(animal.getRaca() != null ? animal.getRaca() : animalExistente.getRaca())
-                .idade(animal.getIdade() > 0 ? animal.getIdade() : animalExistente.getIdade())
-                .peso(animal.getPeso() > 0.0 ? animal.getPeso() : animalExistente.getPeso())
-                .sexo(animal.getSexo() != '\u0000' ? animal.getSexo() : animalExistente.getSexo())
-
-                .build();
-
-        return animalRepository.save(animalAtualizado);
+        // 3. Salvamos. Como o animalExistente já tem o ID original e já está conectado ao banco,
+        // o JPA fará um UPDATE com certeza absoluta.
+        return animalRepository.save(animalExistente);
     }
 
     @Transactional
