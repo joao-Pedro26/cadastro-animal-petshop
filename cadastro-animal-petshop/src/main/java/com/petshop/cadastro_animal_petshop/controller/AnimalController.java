@@ -71,4 +71,14 @@ public class AnimalController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
+    @DeleteMapping("/nome/{nome}")
+    public ResponseEntity<Void> deletarAnimalPorNome(@PathVariable String nome) {
+        try {
+            animalService.deletarAnimalPorNome(nome);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 }

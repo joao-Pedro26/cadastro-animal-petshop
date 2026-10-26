@@ -37,10 +37,8 @@ public class AnimalService {
 
     @Transactional
     public Animal atualizarAnimal(int id, Animal animalAtualizado) {
-        // 1. O Hibernate busca no banco e começa a "monitorar" este objeto (Managed State)
         Animal animalExistente = buscarPorId(id);
 
-        // 2. Atualizamos apenas o que não for nulo direto no objeto monitorado
         if (animalAtualizado.getNome() != null) {
             animalExistente.setNome(animalAtualizado.getNome());
         }
@@ -60,8 +58,6 @@ public class AnimalService {
             animalExistente.setSexo(animalAtualizado.getSexo());
         }
 
-        // 3. Salvamos. Como o animalExistente já tem o ID original e já está conectado ao banco,
-        // o JPA fará um UPDATE com certeza absoluta.
         return animalRepository.save(animalExistente);
     }
 
@@ -69,5 +65,16 @@ public class AnimalService {
     public void deletarAnimal(int id) {
         Animal animal = buscarPorId(id);
         animalRepository.delete(animal);
+    }
+
+    @Transactional
+    public void deletarAnimalPorNome(String nome) {
+        List<Animal> animais = animalRepository.findByNome(nome);
+
+        if (animais.isEmpty()) {
+            throw new RuntimeException("Nenhum animal encontrado com o nome: " + nome);
+        }
+
+        animalRepository.deleteAll(animais);
     }
 }
